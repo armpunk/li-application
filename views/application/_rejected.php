@@ -11,6 +11,32 @@ use yii\grid\GridView;
 <?php
 echo GridView::widget([
     'dataProvider' => $rejected_student,
+    'columns' => [
+        [
+            'class' => 'yii\grid\DataColumn',
+            'value' => function($model) {
+                return $model->student->full_name;
+            },
+            'label' => 'Student Name',
+        ],
+        [
+            'class' => 'yii\grid\DataColumn',
+            'value' => function($model) {
+                return $model->department->name;
+            },
+            'label' => 'Department Applied',
+        ],
+        'date_applied:date',
+        [
+            'class' => 'yii\grid\DataColumn',
+            'value' => function($model) {
+                return ($model->getApprovedBy()->exists()) 
+                ? $model->approvedBy->username 
+                        : 'No Data';
+            },
+            'label' => 'Action Taken By',
+        ],
+    ]
 ]);
 ?>
 
