@@ -20,7 +20,11 @@ if (Yii::$app->session->hasFlash('success')) {
 }
 ?>
 
-<?php $form = ActiveForm::begin() ?>
+<?php $form = ActiveForm::begin([
+    'options' => [
+        'enctype' => 'multipart/form-data'
+    ]
+]) ?>
 
 <?= $form->field($studentModel, 'full_name') ?>
 <?=
@@ -44,7 +48,7 @@ $form->field($studentModel, 'ic_no')->widget(\yii\widgets\MaskedInput::className
 </div>
 
 <div class="form-group">
-    <label>Document Attachments</label>
+    <label>Document Attachments (max 3 files)</label>
     <?=
     FileInput::widget([
         'model' => $uploadModel,
@@ -54,7 +58,8 @@ $form->field($studentModel, 'ic_no')->widget(\yii\widgets\MaskedInput::className
             'accept' => '.docx, .pdf, .xlsx, .pptx'
         ],
         'pluginOptions' => [
-            'maxFileCount' => 3
+            'maxFileCount' => 3,
+            'allowedFileExtensions' => ['docx', 'pdf', 'xlsx', 'pptx']
         ]
     ])
     ?>  
