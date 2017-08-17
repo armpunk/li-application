@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+
 use app\modules\user\models\User;
 use Yii;
 
@@ -17,27 +18,25 @@ use Yii;
  * @property User $approvedBy
  * @property Department $department
  * @property Student $student
+ * @property Attachments[] $attachments
  */
-class Application extends \yii\db\ActiveRecord
-{
-    
+class Application extends \yii\db\ActiveRecord {
+
     const APP_PENDING = 0;
     const APP_APPROVED = 1;
     const APP_REJECTED = 2;
-   
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'application';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['department_id', 'student_id', 'date_applied'], 'required'],
             [['department_id', 'student_id', 'status', 'approved_by'], 'integer'],
@@ -51,8 +50,7 @@ class Application extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => Yii::t('app', 'ID'),
             'department_id' => Yii::t('app', 'Department ID'),
@@ -66,35 +64,37 @@ class Application extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getApprovedBy()
-    {
+    public function getApprovedBy() {
         return $this->hasOne(User::className(), ['id' => 'approved_by']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getDepartment()
-    {
+    public function getDepartment() {
         return $this->hasOne(Department::className(), ['id' => 'department_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getStudent()
-    {
+    public function getStudent() {
         return $this->hasOne(Student::className(), ['id' => 'student_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAttachments() {
+        return $this->hasMany(Attachments::className(), ['application_id' => 'id']);
     }
 
     /**
      * @inheritdoc
      * @return ApplicationQuery the active query used by this AR class.
      */
-    public static function find()
-    {
+    public static function find() {
         return new ApplicationQuery(get_called_class());
     }
-    
-    
+
 }
