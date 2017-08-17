@@ -3,7 +3,29 @@
 use yii\bootstrap\Tabs;
 ?>
 <?php
+    if (Yii::$app->session->hasFlash('success')) {
+        echo yii\bootstrap\Alert::widget([
+            'options' => [
+                'class' => 'alert-success'
+            ],
+            'body' => Yii::$app->session->getFlash('success')
+        ]);
+    }
+?>
 
+<?php
+    if (Yii::$app->session->hasFlash('error')) {
+        echo yii\bootstrap\Alert::widget([
+            'options' => [
+                'class' => 'alert-danger'
+            ],
+            'body' => Yii::$app->session->getFlash('error')
+        ]);
+    }
+?>
+
+
+<?php
 echo Tabs::widget([
     'items' => [
         [
