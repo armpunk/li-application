@@ -6,23 +6,25 @@ use app\models\Student;
 use app\models\Department;
 use Yii;
 use app\models\UploadModel;
-use yii\web\UploadedFile;
 use app\models\Attachments;
 use yii\helpers\Url;
+use yii\web\UploadedFile;
 
-class ApplyController extends \yii\web\Controller {
+class ApplyController extends \yii\web\Controller
+{
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $studentModel = new Student();
         $uploadModel = new UploadModel();
-
         if (Yii::$app->request->isPost) {
+
 
             $studentModel->load(Yii::$app->request->post());
             $studentModel->created_at = Yii::$app->formatter
-                    ->asDatetime('now', 'php:Y-m-d H:i:s');
+                ->asDatetime('now', 'php:Y-m-d H:i:s');
             $studentModel->updated_at = Yii::$app->formatter
-                    ->asDatetime('now', 'php:Y-m-d H:i:s');
+                ->asDatetime('now', 'php:Y-m-d H:i:s');
 
             if ($studentModel->save()) {
                 $student_id = $studentModel->id;
@@ -36,11 +38,11 @@ class ApplyController extends \yii\web\Controller {
                     $application->department_id = $departmentId;
                     $application->student_id = $student_id;
                     $application->date_applied = Yii::$app->formatter
-                            ->asDate('now', 'php:Y-m-d');
+                        ->asDate('now', 'php:Y-m-d');
 
                     if ($application->save()) {
                         Yii::$app->session->setFlash('success', 'LI Application has been submitted. Please check your '
-                                . 'email from time to time.');
+                            . 'email from time to time.');
 
                         array_push($applicationIds, $application->id);
                         $studentModel = new Student();
@@ -49,34 +51,38 @@ class ApplyController extends \yii\web\Controller {
                     }
                 }
 
-                $uploadModel->attachmentFiles = UploadedFile::getInstance($uploadModel, 'attachmentFiles');
+                $uploadModel->load(Yii::$app->request->post());
+                $uploadModel->attachmentFiles = UploadedFile::getInstancesByName('attachmentFiles');
 
                 if ($uploadModel->upload()) {
-                    
+
                     foreach ($applicationIds as $applicationId) {
-                        
+
                         foreach ($uploadModel->attachmentFiles as $attachment) {
                             $attachmentsModel = new Attachments();
                             $attachmentsModel->filepath = Url::to(['/uploads/'
-                                        . $attachment->baseName
-                                        . '.'
-                                        . $attachment->extension]);
+                                . $attachment->baseName
+                                . '.'
+                                . $attachment->extension], true);
                             $attachmentsModel->application_id = $applicationId;
                             $attachmentsModel->save();
                         }
-                        
+
                     }
+                } else {
+                    die('s');
                 }
             }
         }
 
         return $this->render('index', [
-                    'studentModel' => $studentModel,
-                    'uploadModel' => $uploadModel
+            'studentModel' => $studentModel,
+            'uploadModel' => $uploadModel
         ]);
     }
 
-    public function actionCheck($ic_no = null) {
+    public function actionCheck($ic_no = null)
+    {
 
         $applicationsModel = null;
         $hasApplication = true;
@@ -100,30 +106,31 @@ class ApplyController extends \yii\web\Controller {
         }
 
         return $this->render('check', [
-                    'applicationModel' => $applicationsModel,
-                    'student' => $student,
-                    'hasApplication' => $hasApplication
+            'applicationModel' => $applicationsModel,
+            'student' => $student,
+            'hasApplication' => $hasApplication
         ]);
     }
 
-    public function actionTest() {
+    public function actionTest()
+    {
         echo "<pre>";
 
         $students = Student::find()
-                ->orderBy(['created_at' => SORT_DESC])
-                //->asArray()
-                ->one();
+            ->orderBy(['created_at' => SORT_DESC])
+            //->asArray()
+            ->one();
 
         //$dept1 = $students->applications[0]->department->name;
         //$dept2 = $students->applications[1]->department->name;
         //$dept3 = $students->applications[2]->department->name;
 
         $dept = $students
-                ->getApplications()
-                ->with('department')
-                ->with('student')
-                ->asArray()
-                ->all();
+            ->getApplications()
+            ->with('department')
+            ->with('student')
+            ->asArray()
+            ->all();
 
         print_r($dept);
         //print_r($dept2);

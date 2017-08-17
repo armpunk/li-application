@@ -8,6 +8,7 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
+
 ?>
 <br/>
 <?php
@@ -16,47 +17,66 @@ echo GridView::widget([
     'columns' => [
         [
             'class' => 'yii\grid\DataColumn',
-            'value' => function($model) {
+            'value' => function ($model) {
                 return $model->student->full_name;
             },
             'label' => 'Student Name',
         ],
         [
             'class' => 'yii\grid\DataColumn',
-            'value' => function($model) {
+            'value' => function ($model) {
                 return $model->department->name;
             },
             'label' => 'Department Applied',
         ],
         'date_applied:date',
         [
+            'class' => 'yii\grid\DataColumn',
+            'format' => 'html',
+            'value' => function ($model) {
+                $output = '<ul>';
+                $count = 1;
+                foreach ($model->attachments as $attachment) {
+                    $output .= '<li><a href="' . $attachment->filepath . '">Attachment ' . $count . '</a></li>';
+                    $count++;
+                }
+                $output .= "</ul>";
+
+                if ($count == 1) {
+                    $output = "No Attachments";
+                }
+                return $output;
+            },
+            'label' => 'Attachments',
+        ],
+        [
             'class' => 'yii\grid\ActionColumn',
             'header' => '<span class="text-primary">Action</span>',
             'template' => '{approve} {reject}',
             'buttons' => [
-                'approve' => function($url, $data, $key) {
-                    return Html::a('Approve', 
-                            Url::to(['/application/approve', 'id' => $data->id]), [
-                                'class' => 'btn btn-success',
-                                'data' => [
-                                    'confirm' => 'Are you sure you want to approve '
+                'approve' => function ($url, $data, $key) {
+                    return Html::a('Approve',
+                        Url::to(['/application/approve', 'id' => $data->id]), [
+                            'class' => 'btn btn-success',
+                            'data' => [
+                                'confirm' => 'Are you sure you want to approve '
                                     . $data->student->full_name . ' for taking LI at ' .
                                     $data->department->name . '?',
-                                    'method' => 'post'
-                                ]
-                    ]);
+                                'method' => 'post'
+                            ]
+                        ]);
                 },
-                'reject' => function($url, $data, $key) {
-                    return Html::a('Reject', 
-                            Url::to(['/application/reject', 'id' => $data->id]), [
-                                'class' => 'btn btn-danger',
-                                'data' => [
-                                    'confirm' => 'Are you sure you want to reject '
+                'reject' => function ($url, $data, $key) {
+                    return Html::a('Reject',
+                        Url::to(['/application/reject', 'id' => $data->id]), [
+                            'class' => 'btn btn-danger',
+                            'data' => [
+                                'confirm' => 'Are you sure you want to reject '
                                     . $data->student->full_name . ' for taking LI at ' .
                                     $data->department->name . '?',
-                                    'method' => 'post'
-                                ]
-                    ]);
+                                'method' => 'post'
+                            ]
+                        ]);
                 },
             ]
         ]

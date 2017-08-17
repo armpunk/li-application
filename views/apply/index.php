@@ -6,6 +6,7 @@ use dosamigos\selectize\SelectizeDropDownList;
 use yii\helpers\ArrayHelper;
 use app\models\Department;
 use kartik\widgets\FileInput;
+
 ?>
 <h3>LI Application Form</h3>
 
@@ -21,6 +22,7 @@ if (Yii::$app->session->hasFlash('success')) {
 ?>
 
 <?php $form = ActiveForm::begin([
+    'enableAjaxValidation' => false,
     'options' => [
         'enctype' => 'multipart/form-data'
     ]
@@ -48,24 +50,21 @@ $form->field($studentModel, 'ic_no')->widget(\yii\widgets\MaskedInput::className
 </div>
 
 <div class="form-group">
-    <label>Document Attachments (max 3 files)</label>
-    <?=
-    FileInput::widget([
-        'model' => $uploadModel,
-        'attribute' => 'attachmentFiles[]',
-        'options' => [
-            'multiple' => true,
-            'accept' => '.docx, .pdf, .xlsx, .pptx'
-        ],
+
+    <?php
+    echo '<label class="control-label">Add Attachments (Max 3 Files)</label>';
+    echo FileInput::widget([
+        'name' => 'attachmentFiles[]',
+        'options' => ['multiple' => true],
         'pluginOptions' => [
             'maxFileCount' => 3,
-            'allowedFileExtensions' => ['docx', 'pdf', 'xlsx', 'pptx']
+            'allowedFileExtensions' => ['docx', 'pdf', 'pptx', 'xlsx'],
+            'showUpload' => false
         ]
-    ])
-    ?>  
+    ]);
+    ?>
+
 </div>
-
-
 
 <?= \yii\helpers\Html::submitButton('Submit Application', ['class' => 'btn btn-primary'])
 ?>
