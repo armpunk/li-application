@@ -1,11 +1,12 @@
 <?php
-
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 use yii\grid\GridView;
+use yii\helpers\Html;
 ?>
 <br/>
 <?php
@@ -30,18 +31,33 @@ echo GridView::widget([
         [
             'class' => 'yii\grid\ActionColumn',
             'header' => '<span class="text-primary">Action</span>',
+            'template' => '{approve} {reject}',
             'buttons' => [
-                'view' => function($url, $data, $key) {
-                    $string = '<span class="glyphicon glyphicon-eye-open" '
-                            . 'aria-hidden="true"></span>';
-                    return '';
+                'approve' => function($url, $data, $key) {
+                    return Html::a('Approve', '#', [
+                                'class' => 'btn btn-success',
+                                'data' => [
+                                    'confirm' => 'Are you sure you want to approve '
+                                    . $data->student->full_name . ' for taking LI at ' .
+                                    $data->department->name . '?',
+                                    'method' => 'post'
+                                ]
+                    ]);
                 },
-                        
-                
+                'reject' => function($url, $data, $key) {
+                    return Html::a('Reject', '#', [
+                                'class' => 'btn btn-danger',
+                                'data' => [
+                                    'confirm' => 'Are you sure you want to approve '
+                                    . $data->student->full_name . ' for taking LI at ' .
+                                    $data->department->name . '?',
+                                    'method' => 'post'
+                                ]
+                    ]);
+                },
             ]
         ]
     ]
 ]);
 ?>
 
-    
