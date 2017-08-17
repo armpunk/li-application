@@ -29,6 +29,8 @@ class ApplyController extends \yii\web\Controller {
 
                 $departmentIds = Yii::$app->request->post('departments');
 
+                $applicationIds = [];
+
                 foreach ($departmentIds as $departmentId) {
                     $application = new \app\models\Application();
                     $application->department_id = $departmentId;
@@ -40,6 +42,7 @@ class ApplyController extends \yii\web\Controller {
                         Yii::$app->session->setFlash('success', 'LI Application has been submitted. Please check your '
                                 . 'email from time to time.');
 
+                        array_push($applicationIds, $application->id);
                         $studentModel = new Student();
                     } else {
                         $studentModel->delete();
@@ -49,14 +52,19 @@ class ApplyController extends \yii\web\Controller {
                 $uploadModel->attachmentFiles = UploadedFile::getInstance($uploadModel, 'attachmentFiles');
 
                 if ($uploadModel->upload()) {
-                    foreach ($uploadModel->attachmentFiles as $attachment) {
-                        $attachmentsModel = new Attachments();
-                        $attachmentsModel->filepath = Url::to(['/uploads/'
-                                    . $attachment->baseName
-                                    . '.'
-                                    . $attachment->extension]);
-                        $attachmentsModel->application_id = "";
-                        $attachmentsModel->save();
+                    
+                    foreach ($applicationIds as $applicationId) {
+                        
+                        foreach ($uploadModel->attachmentFiles as $attachment) {
+                            $attachmentsModel = new Attachments();
+                            $attachmentsModel->filepath = Url::to(['/uploads/'
+                                        . $attachment->baseName
+                                        . '.'
+                                        . $attachment->extension]);
+                            $attachmentsModel->application_id = $applicationId;
+                            $attachmentsModel->save();
+                        }
+                        
                     }
                 }
             }
