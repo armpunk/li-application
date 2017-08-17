@@ -20,6 +20,11 @@ use Yii;
  */
 class Application extends \yii\db\ActiveRecord
 {
+    
+    const APP_PENDING = 0;
+    const APP_APPROVED = 1;
+    const APP_REJECTED = 2;
+   
     /**
      * @inheritdoc
      */
