@@ -47,6 +47,8 @@ class ApplicationController extends \yii\web\Controller {
         if (Yii::$app->request->isPost) {
             $application = Application::find()->where(['id' => $id])->one();
             $application->status = Application::APP_APPROVED;
+            $application->approved_by = Yii::$app->user->id;
+            
             if ($application->update()) {
                  Yii::$app->session->setFlash('success', 
                         'Application has been approved.');
@@ -64,6 +66,27 @@ class ApplicationController extends \yii\web\Controller {
         }
     }
     
-    public function actionReject($id) {}
+    public function actionReject($id) {
+        if (Yii::$app->request->isPost) {
+            $application = Application::find()->where(['id' => $id])->one();
+            $application->status = Application::APP_REJECTED;
+            $application->approved_by = Yii::$app->user->id;
+            
+            if ($application->update()) {
+                 Yii::$app->session->setFlash('success', 
+                        'Application has been rejected.');
+                 
+                 $this->redirect(Url::to(['/application/index']));
+                 Yii::$app->response->send();
+                 
+            } else {
+                 Yii::$app->session->setFlash('error', 
+                        'Application approval error.');
+                 
+                 $this->redirect(Url::to(['/application/index']));
+                 Yii::$app->response->send();
+            }
+        }
+    }
 
 }
