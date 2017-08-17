@@ -4,6 +4,7 @@ namespace app\controllers;
 use Yii;
 use yii\data\ActiveDataProvider;
 use app\models\Application;
+use yii\helpers\Url;
 
 class ApplicationController extends \yii\web\Controller {
 
@@ -41,5 +42,28 @@ class ApplicationController extends \yii\web\Controller {
             'rejected_student' => $rejected_student,
         ]);
     }
+    
+    public function actionApprove($id) {
+        if (Yii::$app->request->isPost) {
+            $application = Application::find()->where(['id' => $id])->one();
+            $application->status = Application::APP_APPROVED;
+            if ($application->update()) {
+                 Yii::$app->session->setFlash('success', 
+                        'Application has been approved.');
+                 
+                 $this->redirect(Url::to(['/application/index']));
+                 Yii::$app->response->send();
+                 
+            } else {
+                 Yii::$app->session->setFlash('error', 
+                        'Application approval error.');
+                 
+                 $this->redirect(Url::to(['/application/index']));
+                 Yii::$app->response->send();
+            }
+        }
+    }
+    
+    public function actionReject($id) {}
 
 }

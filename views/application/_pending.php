@@ -7,6 +7,7 @@
 
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\helpers\Url;
 ?>
 <br/>
 <?php
@@ -34,7 +35,8 @@ echo GridView::widget([
             'template' => '{approve} {reject}',
             'buttons' => [
                 'approve' => function($url, $data, $key) {
-                    return Html::a('Approve', '#', [
+                    return Html::a('Approve', 
+                            Url::to(['/application/approve', 'id' => $data->id]), [
                                 'class' => 'btn btn-success',
                                 'data' => [
                                     'confirm' => 'Are you sure you want to approve '
@@ -45,10 +47,11 @@ echo GridView::widget([
                     ]);
                 },
                 'reject' => function($url, $data, $key) {
-                    return Html::a('Reject', '#', [
+                    return Html::a('Reject', 
+                            Url::to(['/application/reject', 'id' => $data->id]), [
                                 'class' => 'btn btn-danger',
                                 'data' => [
-                                    'confirm' => 'Are you sure you want to approve '
+                                    'confirm' => 'Are you sure you want to reject '
                                     . $data->student->full_name . ' for taking LI at ' .
                                     $data->department->name . '?',
                                     'method' => 'post'
