@@ -5,7 +5,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+use yii\grid\GridView;
 ?>
-pending
+<?php
+echo GridView::widget([
+    'dataProvider' => $pending_student,
+]);
+?>
 
     
