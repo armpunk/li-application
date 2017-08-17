@@ -1,9 +1,24 @@
 <?php
 /* @var $this yii\web\View */
+use yii\bootstrap\Tabs;
 ?>
-<h1>application/index</h1>
+<?php
 
-<p>
-    You may change the content of this page by modifying
-    the file <code><?= __FILE__; ?></code>.
-</p>
+echo Tabs::widget([
+    'items' => [
+        [
+            'label' => 'Pending Applications',
+            'content' => $this->render('_pending'),
+            'active' => true
+        ],
+        [
+            'label' => 'Approved Applications',
+            'content' => $this->render('_approved'),
+        ],
+        [
+            'label' => 'Rejected Applications',
+            'content' => $this->render('_rejected'),
+        ],
+        
+    ],
+]);

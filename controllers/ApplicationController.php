@@ -1,6 +1,7 @@
 <?php
 
 namespace app\controllers;
+use Yii;
 
 class ApplicationController extends \yii\web\Controller {
 
