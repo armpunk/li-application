@@ -5,12 +5,14 @@ namespace app\controllers;
 use app\models\Student;
 use app\models\Department;
 use Yii;
+use app\models\UploadModel;
 
 class ApplyController extends \yii\web\Controller
 {
     public function actionIndex()
     {
         $studentModel = new Student();
+        $uploadModel = new UploadModel();
         
         if (Yii::$app->request->isPost) {
             
@@ -48,7 +50,8 @@ class ApplyController extends \yii\web\Controller
         }
         
         return $this->render('index', [
-            'studentModel' => $studentModel
+            'studentModel' => $studentModel,
+            'uploadModel' => $uploadModel
         ]);
     }
     

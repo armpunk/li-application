@@ -4,6 +4,8 @@ use yii\bootstrap\ActiveForm;
 use dosamigos\selectize\SelectizeDropDownList;
 use yii\helpers\ArrayHelper;
 use app\models\Department;
+use kartik\widgets\FileInput;
+
 ?>
 <h3>LI Application Form</h3>
 
@@ -36,6 +38,16 @@ use app\models\Department;
     ],
 ]); ?>
 </div>
+
+<div class="form-group">
+    <label>Document Attachments</label>
+  <?= FileInput::widget([
+    'model' => $uploadModel,
+    'attribute' => 'attachmentFiles[]',
+    'options' => ['multiple' => true]
+]) ?>  
+</div>
+
 
 
 <?= \yii\helpers\Html::submitButton('Submit Application', 
