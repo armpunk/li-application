@@ -24,16 +24,19 @@ class ApplicationController extends \yii\web\Controller {
         $pending_student = new ActiveDataProvider([
             'query' => Application::find()
                 ->where(['status' => Application::APP_PENDING])
+                ->orderBy(['date_applied' => SORT_DESC])
         ]);
         
         $approved_student = new ActiveDataProvider([
             'query' => Application::find()
                 ->where(['status' => Application::APP_APPROVED])
+                ->orderBy(['date_applied' => SORT_DESC])
         ]);
         
         $rejected_student = new ActiveDataProvider([
             'query' => Application::find()
                 ->where(['status' => Application::APP_REJECTED])
+                ->orderBy(['date_applied' => SORT_DESC])
         ]);
         
         return $this->render('index', [
